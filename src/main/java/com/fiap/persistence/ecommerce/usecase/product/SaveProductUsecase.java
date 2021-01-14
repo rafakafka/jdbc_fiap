@@ -21,7 +21,11 @@ public class SaveProductUsecase {
         this.productRepository = productRepository;
     }
 
-    public void save(ProductEntity product) {
-        productRepository.save(product);
+    public ProductEntity save(ProductEntity product) {
+        return productRepository.save(product);
+    }
+    
+    public ProductEntity update(ProductEntity product) {
+    	return productRepository.save(product);
     }
 }

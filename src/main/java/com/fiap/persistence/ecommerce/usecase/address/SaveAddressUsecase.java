@@ -15,14 +15,14 @@ import com.fiap.persistence.ecommerce.infrastructure.repository.client.entity.Ad
 @Component
 public class SaveAddressUsecase {
 
-	 	AddressRepository addressRepository;
+	AddressRepository addressRepository;
 
-	    @Autowired
-	    public SaveAddressUsecase (AddressRepository addressRepository){
-	        this.addressRepository = addressRepository;
-	    }
-	    
-	    public void save(AddressEntity addressRequest) {
-	    	addressRepository.save(addressRequest);
-	    }
+	@Autowired
+	public SaveAddressUsecase(AddressRepository addressRepository) {
+		this.addressRepository = addressRepository;
+	}
+
+	public AddressEntity save(AddressEntity addressRequest) {
+		return addressRepository.save(addressRequest);
+	}
 }

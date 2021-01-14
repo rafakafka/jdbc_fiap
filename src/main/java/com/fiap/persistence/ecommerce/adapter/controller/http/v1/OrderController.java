@@ -2,6 +2,7 @@ package com.fiap.persistence.ecommerce.adapter.controller.http.v1;
 
 import com.fiap.persistence.ecommerce.adapter.exception.BadRequestProductNotDeclare;
 import com.fiap.persistence.ecommerce.adapter.exception.ClientNotFound;
+import com.fiap.persistence.ecommerce.adapter.exception.ProductNotFound;
 import com.fiap.persistence.ecommerce.adapter.exception.UnavailableQuantityOfProduct;
 import com.fiap.persistence.ecommerce.infrastructure.repository.order.entity.OrderItemEntity;
 import com.fiap.persistence.ecommerce.usecase.order.GetOrderUsecase;
@@ -28,31 +29,38 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/order/v1")
 public class OrderController {
 
-    private SaveOrderUsecase saveOrderUsecase;
-    private GetOrderUsecase getOrderUsecase;
+	private SaveOrderUsecase saveOrderUsecase;
+	private GetOrderUsecase getOrderUsecase;
 
-    @Autowired
-    public OrderController(SaveOrderUsecase saveOrderUsecase,
-    		GetOrderUsecase getOrderUsecase){
-        this.saveOrderUsecase = saveOrderUsecase;
-        this.getOrderUsecase = getOrderUsecase;
-    }
+	@Autowired
+	public OrderController(SaveOrderUsecase saveOrderUsecase, GetOrderUsecase getOrderUsecase) {
+		this.saveOrderUsecase = saveOrderUsecase;
+		this.getOrderUsecase = getOrderUsecase;
+	}
 
-    @GetMapping(value="/id/{orderId}")
-    public ResponseEntity<Object> getRequestById(
-            @PathVariable(value = "requestId") Integer requestId)
-    {
-        return new ResponseEntity<Object>(getOrderUsecase.getOrderById(requestId), HttpStatus.OK);
-    }
+	@GetMapping(value = "/list/{orderId}")
+	public ResponseEntity<Object> getRequestById(@PathVariable(value = "orderId") Integer orderId) {
+		try {
+			return new ResponseEntity<Object>(getOrderUsecase.getOrderById(orderId), HttpStatus.OK);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+		}
+	}
 
-    @PostMapping(value="/add/{clientId}/products")
-    public ResponseEntity<Object> save(
-    		@PathVariable(value = "clientId") Integer clientId,
-    		@RequestBody List<OrderItemEntity> orderItemEntity
-            ) throws BadRequestProductNotDeclare, UnavailableQuantityOfProduct, ClientNotFound {
-        return new ResponseEntity<>(saveOrderUsecase.save(clientId, orderItemEntity), HttpStatus.CREATED);
-    }
+	@PostMapping(value = "/create/{clientId}/products")
+	public ResponseEntity<Object> save(@PathVariable(value = "clientId") Integer clientId,
+			@RequestBody List<OrderItemEntity> listOrderItem)
+			throws BadRequestProductNotDeclare, UnavailableQuantityOfProduct, ClientNotFound, ProductNotFound {
+		try {
+			return new ResponseEntity<>(saveOrderUsecase.save(clientId, listOrderItem), HttpStatus.CREATED);
+		} catch (BadRequestProductNotDeclare ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+		} catch (UnavailableQuantityOfProduct ex) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+		} catch (ClientNotFound ex) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+		}
+	}
 }
-
-
-

@@ -41,6 +41,8 @@ public class ProductEntity {
     @Column(name="actualUnitValue")
     private BigDecimal actualUnitValue;
     
+	@JsonManagedReference
+	@JsonIgnore
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="product")
 	private Set<OrderItemEntity> orderItem = new LinkedHashSet<OrderItemEntity>();
 	
@@ -56,6 +58,8 @@ public class ProductEntity {
 	public Set<OrderItemEntity> getOrderItem() {
 		return orderItem;
 	}
+
+	@JsonIgnore
 	public void setOrderItem(Set<OrderItemEntity> orderItem) {
 		this.orderItem = orderItem;
 	}

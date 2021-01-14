@@ -1,6 +1,7 @@
 package com.fiap.persistence.ecommerce.infrastructure.repository.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fiap.persistence.ecommerce.infrastructure.repository.client.entity.ClientEntity;
 import java.math.BigDecimal;
@@ -36,7 +37,7 @@ public class OrderEntity {
     @Column(name="orderId")
     private Integer orderId;
     
-    //@JsonBackReference
+    @JsonBackReference
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="clientId")
     private ClientEntity client;
@@ -48,10 +49,10 @@ public class OrderEntity {
     @Column(name="amount")
     private BigDecimal amount;
    
-	@JsonManagedReference
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="order")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="order", orphanRemoval=true)
     private Set<OrderItemEntity> orderItem = new LinkedHashSet<OrderItemEntity>(); 
     
+	@JsonIgnore
 	public Set<OrderItemEntity> getOrderItem() {
 		return orderItem;
 	}

@@ -32,23 +32,29 @@ public class SaveOrderUsecase {
     OrderItemRepository orderItemRepository;
     ProductRepository productRepository;
     ClientRepository clientRepository;
+    List<OrderItemEntity> listOrderItemEntity;
+    List<ProductEntity> listProduct;
 
     @Autowired
     SaveOrderUsecase(OrderRepository orderRepository, 
     		OrderItemRepository orderItemRepository,
     		ProductRepository productRepository,
-    		ClientRepository clientRepository){
+    		ClientRepository clientRepository,
+    		List<OrderItemEntity> listOrderItemEntity,
+    		List<ProductEntity> listProduct){
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productRepository = productRepository;
         this.clientRepository = clientRepository;
+        this.listOrderItemEntity = listOrderItemEntity;
+        this.listProduct = listProduct;
     }
     
     public OrderEntity saveOrder(OrderEntity orderEntity) {
     	return orderRepository.save(orderEntity);
     }
 
-    public OrderEntity save(Integer clientId, List<OrderItemEntity> orderItemEntity) 
+    public OrderEntity save(Integer clientId, List<OrderItemEntity> listOrderItem) 
     		throws BadRequestProductNotDeclare, UnavailableQuantityOfProduct, ClientNotFound {
     	BigDecimal orderAmount = new BigDecimal("0.0");  
     	ClientEntity client = clientRepository.findByClientId(clientId);
@@ -62,28 +68,37 @@ public class SaveOrderUsecase {
     	order.setClient(client);
     	order.setAmount(new BigDecimal(0));
     	orderRepository.save(order);
-    	
-    	for(OrderItemEntity item: orderItemEntity) {
-    		if (item.getProduct().getProductId() == null) {
+    
+    	for(OrderItemEntity orderItem: listOrderItem) {
+    		if (orderItem.getProduct().getProductId() == null) {
     			orderRepository.delete(order);
-    			throw new BadRequestProductNotDeclare(item);
+    			throw new BadRequestProductNotDeclare(orderItem);
     		}
     		
-    		ProductEntity product = productRepository.getOne(item.getProduct().getProductId());
+    		ProductEntity product = productRepository.findByProductId(orderItem.getProduct().getProductId());
 
-    		if (item.getQuantity() > product.getQuantity()) {
+    		if (orderItem.getQuantity() > product.getQuantity()) {
     			orderRepository.delete(order);
-    			throw new UnavailableQuantityOfProduct(item);	
+    			throw new UnavailableQuantityOfProduct(orderItem);	
     		}
     	
-    		orderAmount = orderAmount.add(item.getUnitValue().multiply(new BigDecimal(item.getQuantity())));
-    		item.setOrder(order);
-			item.setProduct(product);
-			orderItemRepository.save(item);
+    		orderAmount = orderAmount.add(orderItem.getUnitValue().multiply(new BigDecimal(orderItem.getQuantity())));
+    		orderItem.setOrder(order);
+    		orderItem.setProduct(product);
+    		
+			listOrderItemEntity.add(orderItem);
+			
+			product.setQuantity(product.getQuantity() - orderItem.getQuantity());
+			listProduct.add(product);
     	}
 
+    	orderItemRepository.saveAll(listOrderItemEntity);
     	order.setAmount(orderAmount);
     	orderRepository.save(order);
-    	return orderRepository.findByOrderId(order.getOrderId());
+    	productRepository.saveAll(listProduct);
+    	
+    	order.setClient(client);
+    	
+    	return order; //orderRepository.findByOrderId(order.getOrderId());
     }
 }

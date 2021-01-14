@@ -23,8 +23,7 @@ public class SaveClientUsecase {
         this.clientRepository = clientRepository;
     }
     
-    public void save(ClientEntity clientRequest) {
-    	System.out.println(clientRequest.toString());
-        clientRepository.save(clientRequest);
+    public ClientEntity save(ClientEntity clientRequest) {
+        return clientRepository.save(clientRequest);
     }
 }

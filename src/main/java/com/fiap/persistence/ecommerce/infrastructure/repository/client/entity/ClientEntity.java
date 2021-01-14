@@ -50,6 +50,8 @@ public class ClientEntity {
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="client")
 	private Set<AddressEntity> address = new LinkedHashSet<AddressEntity>();
 	
+	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="client")
 	private Set<OrderEntity> order = new LinkedHashSet<OrderEntity>();
  

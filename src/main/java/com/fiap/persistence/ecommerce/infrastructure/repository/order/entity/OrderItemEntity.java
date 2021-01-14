@@ -29,12 +29,10 @@ public class OrderItemEntity {
 	@Column(name="orderItemId")
     private Integer orderItemId;
 	
-	@JsonBackReference
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="orderId")
 	private OrderEntity order;
 	
-	//@JsonBackReference
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="productId")
 	private ProductEntity product;
@@ -54,12 +52,14 @@ public class OrderItemEntity {
 	public OrderEntity getOrder() {
 		return order;
 	}
+
 	public void setOrder(OrderEntity order) {
 		this.order = order;
 	}
 	public ProductEntity getProduct() {
 		return product;
 	}
+	
 	public void setProduct(ProductEntity product) {
 		this.product = product;
 	}

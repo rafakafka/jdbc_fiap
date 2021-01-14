@@ -1,6 +1,8 @@
 package com.fiap.persistence.ecommerce.adapter.controller.http.v1;
 
+import com.fiap.persistence.ecommerce.infrastructure.repository.client.entity.AddressEntity;
 import com.fiap.persistence.ecommerce.infrastructure.repository.client.entity.ClientEntity;
+import com.fiap.persistence.ecommerce.usecase.address.SaveAddressUsecase;
 import com.fiap.persistence.ecommerce.usecase.client.GetClientUsecase;
 import com.fiap.persistence.ecommerce.usecase.client.SaveClientUsecase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,40 +19,85 @@ import org.springframework.web.bind.annotation.*;
  * @author Lucas Vinicius, Marcio Campos, Rafael Martins
  */
 
+
 @RestController
 @RequestMapping("/client/v1")
 public class ClientController {
 
-    private SaveClientUsecase saveClientUsecase;
-    private GetClientUsecase getClientUsecase;
+	private SaveClientUsecase saveClientUsecase;
+	private GetClientUsecase getClientUsecase;
+	private SaveAddressUsecase saveAddressUsecase;
 
-    @Autowired
-    public ClientController(SaveClientUsecase saveClientUsecase,
-            GetClientUsecase getClientUsecase){
-        this.saveClientUsecase = saveClientUsecase;
-        this.getClientUsecase = getClientUsecase;
-    }
-    
-    @GetMapping(value="/list")
-    public ResponseEntity<Object> getAllClient() {
-    	return new ResponseEntity<Object>(getClientUsecase.getAllClient(), HttpStatus.OK);
-    }
-    
-    @GetMapping(value="/listId/{clientId}")
-    public ResponseEntity<Object> getClientById(
-            @PathVariable(value = "clientId") Integer clientId)
-    {
-        return new ResponseEntity<Object>(getClientUsecase.getClientById(clientId), HttpStatus.OK);
-    }
+	@Autowired
+	public ClientController(SaveClientUsecase saveClientUsecase, GetClientUsecase getClientUsecase,
+			SaveAddressUsecase saveAddressUsecase) {
+		this.saveClientUsecase = saveClientUsecase;
+		this.getClientUsecase = getClientUsecase;
+		this.saveAddressUsecase = saveAddressUsecase;
+	}
 
-    @PostMapping(value="/add")
-    public ResponseEntity<Object> saveClient(
-            @RequestBody ClientEntity client)
-    {
-    	saveClientUsecase.save(client);
-        return new ResponseEntity<>(client, HttpStatus.CREATED);
-    }
+	@GetMapping(value = "/list")
+	public ResponseEntity<Object> getAllClient() {
+		try {
+
+			return new ResponseEntity<Object>(getClientUsecase.getAllClient(), HttpStatus.OK);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+		}
+	}
+
+	@GetMapping(value = "/list/{clientId}")
+	public ResponseEntity<Object> getClientById(@PathVariable(value = "clientId") Integer clientId) {
+		try {
+			return new ResponseEntity<Object>(getClientUsecase.getClientById(clientId), HttpStatus.OK);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+		}
+	}
+	
+
+	@PostMapping(value = "/create")
+	public ResponseEntity<Object> saveClient(@RequestBody ClientEntity client) {
+		try {
+			return new ResponseEntity<Object>(HttpStatus.CREATED);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+		}
+	}
+
+	@PostMapping(value = "/create/{clientId}/address")
+	public ResponseEntity<Object> saveAddress(@PathVariable(value = "clientId") Integer clientId,
+			@RequestBody AddressEntity address) {
+		try {
+			ClientEntity client = getClientUsecase.getClientById(clientId);
+			address.setClient(client);
+			return new ResponseEntity<Object>(HttpStatus.CREATED);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+		}
+	}
+	
+	/*
+	@PostMapping(value = "/create")
+	public ResponseEntity<Object> saveClient(@RequestBody ClientEntity client) {
+		try {
+			return new ResponseEntity<>(saveClientUsecase.save(client), HttpStatus.CREATED);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+		}
+	}
+
+	@PostMapping(value = "/create/{clientId}/address")
+	public ResponseEntity<Object> saveAddress(@PathVariable(value = "clientId") Integer clientId,
+			@RequestBody AddressEntity address) {
+		try {
+			ClientEntity client = getClientUsecase.getClientById(clientId);
+			address.setClient(client);
+			return new ResponseEntity<>(saveAddressUsecase.save(address), HttpStatus.CREATED);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+		}
+	}
+*/	
+	
 }
-
-
-
