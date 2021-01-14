@@ -1,0 +1,48 @@
+use fiap;
+
+create table `client` (
+  clientId INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50),
+  documentNumber VARCHAR(15),
+  birthDate DATE 
+);
+
+CREATE TABLE `address` (
+  addressId INT PRIMARY KEY AUTO_INCREMENT,
+  clientId INT,
+  street VARCHAR(150),
+  number VARCHAR (30),
+  neighborhood VARCHAR(50),
+  city VARCHAR(50),
+  state VARCHAR(30),
+  zipCode VARCHAR(10)
+);
+
+ALTER TABLE `address` ADD CONSTRAINT fk_client FOREIGN KEY (clientId) REFERENCES client (clientId);
+
+CREATE TABLE `product` (
+  productId INT PRIMARY KEY AUTO_INCREMENT ,
+  name VARCHAR (100),
+  quantity INT,
+  actualUnitValue DOUBLE
+);
+
+CREATE TABLE `order` ( 
+  orderId INT PRIMARY KEY AUTO_INCREMENT,
+  clientId INT,
+  date DATE,
+  amount DOUBLE
+);
+
+ALTER TABLE `order` ADD CONSTRAINT fk_order_client FOREIGN KEY (clientId) REFERENCES `client` (clientId);
+
+CREATE TABLE `orderItem` (
+  orderItemId INT PRIMARY KEY AUTO_INCREMENT,
+  orderId INT,
+  productId INT,
+  quantity INT,
+  unitValue DOUBLE
+);
+
+ALTER TABLE `orderItem` ADD CONSTRAINT fk_product FOREIGN KEY (productId) REFERENCES `product` (productId);
+ALTER TABLE `orderItem` ADD CONSTRAINT fk_order FOREIGN KEY (orderId) REFERENCES `order` (orderId);
