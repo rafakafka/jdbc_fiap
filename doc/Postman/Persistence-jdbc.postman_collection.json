@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "4b93cd44-2c51-4379-9158-94a136257de7",
+		"name": "Persistence-jdbc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Order - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\n\t\t\"product\": {\n\t\t\t\"productId\": 4\n\t\t},\n\t\t\"quantity\": 1,\n\t\t\"unitValue\": 10\n},\n{\n\t\t\"product\": {\n\t\t\t\"productId\": 5\n\t\t},\n\t\t\"quantity\": 2,\n\t\t\"unitValue\": 10\n}]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/order/v1/create/17/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"order",
+						"v1",
+						"create",
+						"17",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order - List by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/order/v1/list/100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"order",
+						"v1",
+						"list",
+						"100"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/product/v1/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"product",
+						"v1",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product - List By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/product/v1/list/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"product",
+						"v1",
+						"list",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Bota\",\n\t\"quantity\": 40,\n\t\"actualUnitValue\": 699.99\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/product/v1/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"product",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/client/v1/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"client",
+						"v1",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Catarina Mitheus\",\n\t\"documentNumber\":\"879879667679\",\n\t\"birthDate\": \"1979-04-01T00:00:00-03:00\",\n\t\"address\": [{\n\t\t\"street\": \"Rua tres\",\n\t\t\"number\": \"42 B\",\n\t\t\"neighborhood\": \"Vila Matarazzo\",\n\t\t\"city\":\"São Paulo\",\n\t\t\"state\":\"São Paulo\",\n\t\t\"zipCode\": \"123445-009\"\n\t}]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/client/v1/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"client",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client - Create Address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"street\": \"Rua teste\",\n\t\"number\": \"42 B\",\n\t\"neighborhood\": \"Vila Matarazzo\",\n\t\"city\":\"São Paulo\",\n\t\"state\":\"São Paulo\",\n\t\"zipCode\": \"123445-009\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/client/v1/create/28/address",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"client",
+						"v1",
+						"create",
+						"28",
+						"address"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
