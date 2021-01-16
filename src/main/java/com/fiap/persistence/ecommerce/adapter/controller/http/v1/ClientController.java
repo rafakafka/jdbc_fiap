@@ -59,7 +59,7 @@ public class ClientController {
 	@PostMapping(value = "/create")
 	public ResponseEntity<Object> saveClient(@RequestBody ClientEntity client) {
 		try {
-			return new ResponseEntity<Object>(HttpStatus.CREATED);
+			return new ResponseEntity<>(saveClientUsecase.save(client), HttpStatus.CREATED);
 		} catch (Exception ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
 		}
