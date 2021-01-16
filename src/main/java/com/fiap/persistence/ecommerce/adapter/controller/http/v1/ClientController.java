@@ -71,33 +71,10 @@ public class ClientController {
 		try {
 			ClientEntity client = getClientUsecase.getClientById(clientId);
 			address.setClient(client);
-			return new ResponseEntity<Object>(HttpStatus.CREATED);
-		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-		}
-	}
-	
-	/*
-	@PostMapping(value = "/create")
-	public ResponseEntity<Object> saveClient(@RequestBody ClientEntity client) {
-		try {
-			return new ResponseEntity<>(saveClientUsecase.save(client), HttpStatus.CREATED);
-		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-		}
-	}
-
-	@PostMapping(value = "/create/{clientId}/address")
-	public ResponseEntity<Object> saveAddress(@PathVariable(value = "clientId") Integer clientId,
-			@RequestBody AddressEntity address) {
-		try {
-			ClientEntity client = getClientUsecase.getClientById(clientId);
-			address.setClient(client);
 			return new ResponseEntity<>(saveAddressUsecase.save(address), HttpStatus.CREATED);
 		} catch (Exception ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
 		}
 	}
-*/	
 	
 }
